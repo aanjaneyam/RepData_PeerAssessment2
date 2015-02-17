@@ -9,3 +9,9 @@
 
 # RStudio files
 .Rproj.user/
+.Rproj.user
+
+repdata_data_StormData.csv.bz2
+
+RepData_PeerAssessment2_cache
+RepData_PeerAssessment2_cache/

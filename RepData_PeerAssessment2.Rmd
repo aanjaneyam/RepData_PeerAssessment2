@@ -1,0 +1,39 @@
+---
+title: "Public and economic effects of storms and other severe weather events in USA"
+author: "Aanjaneya Mishra"
+date: "16/02/2015"
+output: html_document
+---
+
+```{r echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+## Synopsis
+
+In this report we explore the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage. While exploring the database we will be answering the following: 
+
+1. Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+2. Across the United States, which types of events have the greatest economic consequences?
+
+## Data Processing
+
+From the URL [https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2) we obtained U.S. National Oceanic and Atmospheric Administration's (NOAA) data on major storms and weather events in the United States from the year 1950 to November 2011. 
+
+### Download the data
+
+```{r}
+if(!file.exists("repdata_data_StormData.csv.bz2")) {
+fileURL <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2"
+download.file(fileURL, destfile="repdata_data_StormData.csv.bz2", method = "curl")
+}
+```
+
+### Read The data
+
+```{r}
+stormdata <- read.csv(bzfile("repdata_data_StormData.csv.bz2"))
+dim(stormdata)
+```
+
