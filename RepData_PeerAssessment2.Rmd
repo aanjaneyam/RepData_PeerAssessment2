@@ -87,12 +87,30 @@ head(healthimpact)
 
 #### Economic effect of storms and severe weather accross USA
 
-To be able to determine this aspect in the results section we will use the PROPDMG and CROPDMG columns of the storm data as these columns are relavant for determination economic consequences. 
+To be able to determine this aspect in the results section we will use the PROPDMG, PROPDMGEXP, CROPDMG and CROPDMGEXP columns of the storm data as these columns are relavant for determination economic consequences. The columns PROPDMG and CROPDMG contain units of damage whereas the PROPDMGEXP and CROPDMGEXP contain exponentials(10^x) like millions or billions to be applied to PROPDMG and CROPDMG. Therefore, in order to get the true value of property and crop damage we need to interpret, recode the PROPDMGEXP and CROPDMGEXP variables and then merge with PROPDMG and CROPDMG.
+
+Interpret and recode the PROPDMGEXP and CROPDMGEXP values to numeric versions so that we can apply arithmetic calculations to it.
+
+```{r}
+library(car)
+stormdata$PROPDMGEXP <- as.numeric(recode(as.character(stormdata$PROPDMGEXP), 
+    "'0'=1;'1'=10;'2'=10^2;'3'=10^3;'4'=10^4;'5'=10^5;'6'=10^6;'7'=10^7;'8'=10^8;'b'=10^9;'h'=10^2;'k'=10^3;'m'=10^6;'-'=0;'?'=0;'+'=0"))
+stormdata$CROPDMGEXP <- as.numeric(recode(as.character(stormdata$CROPDMGEXP), 
+    "'0'=1;'1'=10;'2'=10^2;'3'=10^3;'4'=10^4;'5'=10^5;'6'=10^6;'7'=10^7;'8'=10^8;'b'=10^9;'h'=10^2;'k'=10^3;'m'=10^6;'-'=0;'?'=0;'+'=0"))
+```
+
+Apply the recoded numeric values of PROPDMGEXP and CROPDMGEXP to PROPDMG and CROPDMG. It will be done by multiplying PROPDMGEXP with PROPDMG and CROPDMGEXP with CROPDMG.
+
+```{r}
+stormdata$PROPDMGVALUE <- stormdata$PROPDMG * stormdata$PROPDMGEXP
+stormdata$CROPDMGVALUE <- stormdata$CROPDMG * stormdata$CROPDMGEXP
+```
+
 
 Aggregate and order property damage by event type
 
 ```{r}
-propdamage <- aggregate(PROPDMG ~ EVTYPE, stormdata, sum)
+propdamage <- aggregate(PROPDMGVALUE ~ EVTYPE, stormdata, sum)
 colnames(propdamage) <- c("Event", "PropertyDamage")
 propdamage <- propdamage[order(propdamage$Event), ]
 ```
@@ -100,7 +118,7 @@ propdamage <- propdamage[order(propdamage$Event), ]
 Aggregate and order crop damage by event type
 
 ```{r}
-cropdamage <- aggregate(CROPDMG ~ EVTYPE, stormdata, sum)
+cropdamage <- aggregate(CROPDMGVALUE ~ EVTYPE, stormdata, sum)
 colnames(cropdamage) <- c("Event", "CropDamage")
 cropdamage <- cropdamage[order(cropdamage$Event), ]
 ```
