@@ -88,9 +88,124 @@ download.file(fileURL, destfile=&quot;repdata_data_StormData.csv.bz2&quot;, meth
 </div>
 <div id="read-the-data" class="section level3">
 <h3>Read The data</h3>
-<pre class="r"><code>stormdata &lt;- read.csv(bzfile(&quot;repdata_data_StormData.csv.bz2&quot;))
-dim(stormdata)</code></pre>
+<pre class="r"><code>stormdata &lt;- read.csv(bzfile(&quot;repdata_data_StormData.csv.bz2&quot;))</code></pre>
+</div>
+<div id="data-summary" class="section level3">
+<h3>Data summary</h3>
+<pre class="r"><code>dim(stormdata)</code></pre>
 <pre><code>## [1] 902297     37</code></pre>
+<pre class="r"><code>str(stormdata)</code></pre>
+<pre><code>## 'data.frame':    902297 obs. of  37 variables:
+##  $ STATE__   : num  1 1 1 1 1 1 1 1 1 1 ...
+##  $ BGN_DATE  : Factor w/ 16335 levels &quot;10/10/1954 0:00:00&quot;,..: 6523 6523 4213 11116 1426 1426 1462 2873 3980 3980 ...
+##  $ BGN_TIME  : Factor w/ 3608 levels &quot;000&quot;,&quot;0000&quot;,&quot;00:00:00 AM&quot;,..: 212 257 2645 1563 2524 3126 122 1563 3126 3126 ...
+##  $ TIME_ZONE : Factor w/ 22 levels &quot;ADT&quot;,&quot;AKS&quot;,&quot;AST&quot;,..: 7 7 7 7 7 7 7 7 7 7 ...
+##  $ COUNTY    : num  97 3 57 89 43 77 9 123 125 57 ...
+##  $ COUNTYNAME: Factor w/ 29601 levels &quot;&quot;,&quot;5NM E OF MACKINAC BRIDGE TO PRESQUE ISLE LT MI&quot;,..: 13513 1873 4598 10592 4372 10094 1973 23873 24418 4598 ...
+##  $ STATE     : Factor w/ 72 levels &quot;AK&quot;,&quot;AL&quot;,&quot;AM&quot;,..: 2 2 2 2 2 2 2 2 2 2 ...
+##  $ EVTYPE    : Factor w/ 985 levels &quot;?&quot;,&quot;ABNORMALLY DRY&quot;,..: 830 830 830 830 830 830 830 830 830 830 ...
+##  $ BGN_RANGE : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ BGN_AZI   : Factor w/ 35 levels &quot;&quot;,&quot;E&quot;,&quot;Eas&quot;,&quot;EE&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ BGN_LOCATI: Factor w/ 54429 levels &quot;&quot;,&quot;?&quot;,&quot;(01R)AFB GNRY RNG AL&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ END_DATE  : Factor w/ 6663 levels &quot;&quot;,&quot;10/10/1993 0:00:00&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ END_TIME  : Factor w/ 3647 levels &quot;&quot;,&quot;?&quot;,&quot;0000&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ COUNTY_END: num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ COUNTYENDN: logi  NA NA NA NA NA NA ...
+##  $ END_RANGE : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ END_AZI   : Factor w/ 24 levels &quot;&quot;,&quot;E&quot;,&quot;ENE&quot;,&quot;ESE&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ END_LOCATI: Factor w/ 34506 levels &quot;&quot;,&quot;(0E4)PAYSON ARPT&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ LENGTH    : num  14 2 0.1 0 0 1.5 1.5 0 3.3 2.3 ...
+##  $ WIDTH     : num  100 150 123 100 150 177 33 33 100 100 ...
+##  $ F         : int  3 2 2 2 2 2 2 1 3 3 ...
+##  $ MAG       : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ FATALITIES: num  0 0 0 0 0 0 0 0 1 0 ...
+##  $ INJURIES  : num  15 0 2 2 2 6 1 0 14 0 ...
+##  $ PROPDMG   : num  25 2.5 25 2.5 2.5 2.5 2.5 2.5 25 25 ...
+##  $ PROPDMGEXP: Factor w/ 19 levels &quot;&quot;,&quot;-&quot;,&quot;?&quot;,&quot;+&quot;,..: 17 17 17 17 17 17 17 17 17 17 ...
+##  $ CROPDMG   : num  0 0 0 0 0 0 0 0 0 0 ...
+##  $ CROPDMGEXP: Factor w/ 9 levels &quot;&quot;,&quot;?&quot;,&quot;0&quot;,&quot;2&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ WFO       : Factor w/ 542 levels &quot;&quot;,&quot;2&quot;,&quot;43&quot;,&quot;9V9&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ STATEOFFIC: Factor w/ 250 levels &quot;&quot;,&quot;ALABAMA, Central&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ ZONENAMES : Factor w/ 25112 levels &quot;&quot;,&quot;                                                                                                                               &quot;| __truncated__,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ LATITUDE  : num  3040 3042 3340 3458 3412 ...
+##  $ LONGITUDE : num  8812 8755 8742 8626 8642 ...
+##  $ LATITUDE_E: num  3051 0 0 0 0 ...
+##  $ LONGITUDE_: num  8806 0 0 0 0 ...
+##  $ REMARKS   : Factor w/ 436781 levels &quot;&quot;,&quot; &quot;,&quot;  &quot;,&quot;   &quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ REFNUM    : num  1 2 3 4 5 6 7 8 9 10 ...</code></pre>
+</div>
+<div id="processing-the-data-for-the-purpose-of-getting-results" class="section level3">
+<h3>Processing the data for the purpose of getting results</h3>
+<div id="effect-of-storms-and-severe-weather-on-health-of-population-accross-usa" class="section level4">
+<h4>Effect of storms and severe weather on health of population accross USA</h4>
+<p>To be able to determine this aspect in the results section we will use the FATALITIES and INJURIES columns of the storm data as these columns are relavant for determination of effect on public health.</p>
+<p>Aggregate and order fatalities by event type</p>
+<pre class="r"><code>fatalities &lt;- aggregate(FATALITIES ~ EVTYPE, stormdata, sum)
+colnames(fatalities) &lt;- c(&quot;Event&quot;, &quot;Fatalaties&quot;)
+fatalities &lt;- fatalities[order(fatalities$Event), ]</code></pre>
+<p>Aggregate and order injuries by event type</p>
+<pre class="r"><code>injuries &lt;- aggregate(INJURIES ~ EVTYPE, stormdata, sum)
+colnames(injuries) &lt;- c(&quot;Event&quot;, &quot;Injuries&quot;)
+injuries &lt;- injuries[order(injuries$Event), ]</code></pre>
+<p>Combine fatalities and injuries by event type.</p>
+<pre class="r"><code>healthimpact &lt;- cbind(fatalities, injuries$Injuries)
+colnames(healthimpact) &lt;- c(&quot;Event&quot;, &quot;Fatalaties&quot;, &quot;Injuries&quot;)</code></pre>
+<p>Clean and narrow down healthimpact table by removing values where fatalities and injuries are 0. We do this since events with 0 occurences are not useful for determination of meaningful results.</p>
+<pre class="r"><code>healthimpact &lt;-healthimpact[healthimpact$Fatalaties &gt; 0 | healthimpact$Injuries &gt; 0, ]
+head(healthimpact)</code></pre>
+<pre><code>##           Event Fatalaties Injuries
+## 10     AVALANCE          1        0
+## 11    AVALANCHE        224      170
+## 21    BLACK ICE          1       24
+## 22     BLIZZARD        101      805
+## 32 blowing snow          1        1
+## 34 BLOWING SNOW          1       13</code></pre>
+<p>We order the healthimpact table to put the events in decreasing order of effect on population health. In other words decreasing ordering will put most harmful events at the top of the table while those least harmful at the bottom.</p>
+<pre class="r"><code>healthimpact &lt;- healthimpact[order(healthimpact$Fatalaties, healthimpact$Injuries, decreasing = TRUE), ]
+head(healthimpact)</code></pre>
+<pre><code>##              Event Fatalaties Injuries
+## 830        TORNADO       5633    91346
+## 123 EXCESSIVE HEAT       1903     6525
+## 147    FLASH FLOOD        978     1777
+## 269           HEAT        937     2100
+## 452      LIGHTNING        816     5230
+## 854      TSTM WIND        504     6957</code></pre>
+</div>
+<div id="economic-effect-of-storms-and-severe-weather-accross-usa" class="section level4">
+<h4>Economic effect of storms and severe weather accross USA</h4>
+<p>To be able to determine this aspect in the results section we will use the PROPDMG and CROPDMG columns of the storm data as these columns are relavant for determination economic consequences.</p>
+<p>Aggregate and order property damage by event type</p>
+<pre class="r"><code>propdamage &lt;- aggregate(PROPDMG ~ EVTYPE, stormdata, sum)
+colnames(propdamage) &lt;- c(&quot;Event&quot;, &quot;PropertyDamage&quot;)
+propdamage &lt;- propdamage[order(propdamage$Event), ]</code></pre>
+<p>Aggregate and order crop damage by event type</p>
+<pre class="r"><code>cropdamage &lt;- aggregate(CROPDMG ~ EVTYPE, stormdata, sum)
+colnames(cropdamage) &lt;- c(&quot;Event&quot;, &quot;CropDamage&quot;)
+cropdamage &lt;- cropdamage[order(cropdamage$Event), ]</code></pre>
+<p>Combine property and and crop damages by event type.</p>
+<pre class="r"><code>economicimpact &lt;- cbind(propdamage, cropdamage$CropDamage)
+colnames(economicimpact) &lt;- c(&quot;Event&quot;, &quot;PropertyDamage&quot;, &quot;CropDamage&quot;)</code></pre>
+<p>Clean and narrow down economicimpact table by removing values where propertydamage and cropdamage are 0. We do this since events with 0 occurences are not useful for determination of meaningful results.</p>
+<pre class="r"><code>economicimpact &lt;-economicimpact[economicimpact$PropertyDamage &gt; 0 | economicimpact$CropDamage &gt; 0, ]
+head(economicimpact)</code></pre>
+<pre><code>##                     Event PropertyDamage CropDamage
+## 1                       ?            5.0       0.00
+## 6     AGRICULTURAL FREEZE            0.0      28.82
+## 7           APACHE COUNTY            5.0       0.00
+## 8  ASTRONOMICAL HIGH TIDE          933.5       0.00
+## 9   ASTRONOMICAL LOW TIDE          320.0       0.00
+## 11              AVALANCHE         1623.9       0.00</code></pre>
+<p>We order the economicimpact table to put the events in decreasing order of economic effect. In other words decreasing ordering will put most economicall harmful events at the top of the table while those least harmful at the bottom.</p>
+<pre class="r"><code>economicimpact &lt;- economicimpact[order(economicimpact$PropertyDamage,economicimpact$CropDamage, decreasing = TRUE), ]
+head(economicimpact)</code></pre>
+<pre><code>##                 Event PropertyDamage CropDamage
+## 830           TORNADO      3212258.2  100018.52
+## 147       FLASH FLOOD      1420124.6  179200.46
+## 854         TSTM WIND      1335965.6  109202.60
+## 164             FLOOD       899938.5  168037.88
+## 759 THUNDERSTORM WIND       876844.2   66791.45
+## 238              HAIL       688693.4  579596.28</code></pre>
+</div>
 </div>
 </div>
 

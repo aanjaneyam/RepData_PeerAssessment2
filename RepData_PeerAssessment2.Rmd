@@ -34,6 +34,94 @@ download.file(fileURL, destfile="repdata_data_StormData.csv.bz2", method = "curl
 
 ```{r}
 stormdata <- read.csv(bzfile("repdata_data_StormData.csv.bz2"))
+```
+### Data summary
+
+```{r}
 dim(stormdata)
+str(stormdata)
 ```
 
+### Processing the data for the purpose of getting results
+
+#### Effect of storms and severe weather on health of population accross USA
+
+To be able to determine this aspect in the results section we will use the FATALITIES and INJURIES columns of the storm data as these columns are relavant for determination of effect on public health. 
+
+Aggregate and order fatalities by event type
+
+```{r}
+fatalities <- aggregate(FATALITIES ~ EVTYPE, stormdata, sum)
+colnames(fatalities) <- c("Event", "Fatalaties")
+fatalities <- fatalities[order(fatalities$Event), ]
+```
+
+Aggregate and order injuries by event type
+
+```{r}
+injuries <- aggregate(INJURIES ~ EVTYPE, stormdata, sum)
+colnames(injuries) <- c("Event", "Injuries")
+injuries <- injuries[order(injuries$Event), ]
+```
+
+Combine fatalities and injuries by event type.
+
+```{r}
+healthimpact <- cbind(fatalities, injuries$Injuries)
+colnames(healthimpact) <- c("Event", "Fatalaties", "Injuries")
+```
+
+Clean and narrow down healthimpact table by removing values where fatalities and injuries are 0. We do this since events with 0 occurences are not useful for determination of meaningful results.
+
+```{r}
+healthimpact <-healthimpact[healthimpact$Fatalaties > 0 | healthimpact$Injuries > 0, ]
+head(healthimpact)
+```
+
+We order the healthimpact table to put the events in decreasing order of effect on population health. In other words decreasing ordering will put most harmful events at the top of the table while those least harmful at the bottom.
+
+```{r}
+healthimpact <- healthimpact[order(healthimpact$Fatalaties, healthimpact$Injuries, decreasing = TRUE), ]
+head(healthimpact)
+```
+
+#### Economic effect of storms and severe weather accross USA
+
+To be able to determine this aspect in the results section we will use the PROPDMG and CROPDMG columns of the storm data as these columns are relavant for determination economic consequences. 
+
+Aggregate and order property damage by event type
+
+```{r}
+propdamage <- aggregate(PROPDMG ~ EVTYPE, stormdata, sum)
+colnames(propdamage) <- c("Event", "PropertyDamage")
+propdamage <- propdamage[order(propdamage$Event), ]
+```
+
+Aggregate and order crop damage by event type
+
+```{r}
+cropdamage <- aggregate(CROPDMG ~ EVTYPE, stormdata, sum)
+colnames(cropdamage) <- c("Event", "CropDamage")
+cropdamage <- cropdamage[order(cropdamage$Event), ]
+```
+
+Combine property and and crop damages by event type.
+
+```{r}
+economicimpact <- cbind(propdamage, cropdamage$CropDamage)
+colnames(economicimpact) <- c("Event", "PropertyDamage", "CropDamage")
+```
+
+Clean and narrow down economicimpact table by removing values where propertydamage and cropdamage are 0. We do this since events with 0 occurences are not useful for determination of meaningful results.
+
+```{r}
+economicimpact <-economicimpact[economicimpact$PropertyDamage > 0 | economicimpact$CropDamage > 0, ]
+head(economicimpact)
+```
+
+We order the economicimpact table to put the events in decreasing order of economic effect. In other words decreasing ordering will put most economicall harmful events at the top of the table while those least harmful at the bottom.
+
+```{r}
+economicimpact <- economicimpact[order(economicimpact$PropertyDamage,economicimpact$CropDamage, decreasing = TRUE), ]
+head(economicimpact)
+```
