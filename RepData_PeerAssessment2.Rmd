@@ -12,11 +12,13 @@ knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
 
 ## Synopsis
 
-In this report we explore the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage. While exploring the database we will be answering the following: 
+In this report we explore the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property damage. In this report we are tasked with answering the following: 
 
 1. Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
 
 2. Across the United States, which types of events have the greatest economic consequences?
+
+Upon exploring the storm database we found that Tornados are most harmful with respect to population health followed by Excessive Heat, Flash Flood, Heat. Lightning etc. We also found that Flood was the most harmful for properties followed by Hurricane/Typhoon, Tornado, Storm Surge etc. In case of crop damage Drought was the most harmful followed by Flood, River Flood, Ice Storm, Hail etc.
 
 ## Data Processing
 
@@ -168,6 +170,18 @@ Now the bar plot
 
 ```{r}
 barplot(tplotdatahealth, names.arg = healthimpact$Event, legend = c( "Fatalities", "Injuries"), 
-    main = "Total fatalities and injuries by events", col = c("red", "darkblue"), xlim = c(0,10), ylim = c(0,10000))
+    main = "Total fatalities and injuries by events", col = c("red", "darkblue"), xlim = c(0,10), ylim = c(0,100000), cex.axis = 0.8, cex.names = 0.6, las = 2)
+```
+
+
+### Across the United States, which types of events have the greatest economic consequences?
+
+To answer this question we will draw a two barplots, one for crop damage and the other for propertydamage,  to see economic consequences of most devastating weather events. We will also see the numbers (numeric view )of property and crop damages for top 6 events.
+
+Numeric view of property and crop damages for top 6 events. We can see that in case of property damage Flood was the most harmful followed by Hurricane/Typhoon, Tornado, Storm Surge etc. In case of crop damage Drought was the most harmful followed by Flood, River Flood, Ice Storm, Hail etc
+
+```{r}
+head(propimpact)
+head(cropimpact)
 ```
 
