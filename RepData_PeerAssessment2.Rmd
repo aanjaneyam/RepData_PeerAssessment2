@@ -3,6 +3,7 @@ title: "Public and economic effects of storms and other severe weather events in
 author: "Aanjaneya Mishra"
 date: "16/02/2015"
 output: html_document
+keep_md: true
 ---
 
 ```{r echo = FALSE}
@@ -21,7 +22,7 @@ In this report we explore the U.S. National Oceanic and Atmospheric Administrati
 
 From the URL [https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2FStormData.csv.bz2) we obtained U.S. National Oceanic and Atmospheric Administration's (NOAA) data on major storms and weather events in the United States from the year 1950 to November 2011. 
 
-### Download the data
+### Downloading the data
 
 ```{r}
 if(!file.exists("repdata_data_StormData.csv.bz2")) {
@@ -30,7 +31,7 @@ download.file(fileURL, destfile="repdata_data_StormData.csv.bz2", method = "curl
 }
 ```
 
-### Read The data
+### Reading The data
 
 ```{r}
 stormdata <- read.csv(bzfile("repdata_data_StormData.csv.bz2"))
@@ -75,6 +76,7 @@ Clean and narrow down healthimpact table by removing values where fatalities and
 
 ```{r}
 healthimpact <-healthimpact[healthimpact$Fatalaties > 0 | healthimpact$Injuries > 0, ]
+# rownames(healthimpact) <- NULL
 head(healthimpact)
 ```
 
@@ -85,21 +87,22 @@ healthimpact <- healthimpact[order(healthimpact$Fatalaties, healthimpact$Injurie
 head(healthimpact)
 ```
 
-#### Economic effect of storms and severe weather accross USA
+#### Economic effects of storms and severe weather accross USA
 
-To be able to determine this aspect in the results section we will use the PROPDMG, PROPDMGEXP, CROPDMG and CROPDMGEXP columns of the storm data as these columns are relavant for determination economic consequences. The columns PROPDMG and CROPDMG contain units of damage whereas the PROPDMGEXP and CROPDMGEXP contain exponentials(10^x) like millions or billions to be applied to PROPDMG and CROPDMG. Therefore, in order to get the true value of property and crop damage we need to interpret, recode the PROPDMGEXP and CROPDMGEXP variables and then merge with PROPDMG and CROPDMG.
+To be able to determine this aspect in the results section we will use the PROPDMG, PROPDMGEXP, CROPDMG and CROPDMGEXP columns of the storm data as these columns are relavant for determination economic consequences. The columns PROPDMG and CROPDMG contain units of damage whereas the PROPDMGEXP and CROPDMGEXP contain exponentials(10^x) like million or billion to be applied to PROPDMG and CROPDMG. Therefore, in order to get the true value of property and crop damage we need to interpret, recode the PROPDMGEXP and CROPDMGEXP variables and then merge them with PROPDMG and CROPDMG.
 
 Interpret and recode the PROPDMGEXP and CROPDMGEXP values to numeric versions so that we can apply arithmetic calculations to it.
 
 ```{r}
 library(car)
-stormdata$PROPDMGEXP <- as.numeric(recode(as.character(stormdata$PROPDMGEXP), 
-    "'0'=1;'1'=10;'2'=10^2;'3'=10^3;'4'=10^4;'5'=10^5;'6'=10^6;'7'=10^7;'8'=10^8;'b'=10^9;'h'=10^2;'k'=10^3;'m'=10^6;'-'=0;'?'=0;'+'=0"))
-stormdata$CROPDMGEXP <- as.numeric(recode(as.character(stormdata$CROPDMGEXP), 
-    "'0'=1;'1'=10;'2'=10^2;'3'=10^3;'4'=10^4;'5'=10^5;'6'=10^6;'7'=10^7;'8'=10^8;'b'=10^9;'h'=10^2;'k'=10^3;'m'=10^6;'-'=0;'?'=0;'+'=0"))
+stormdata$PROPDMGEXP <- factor(tolower(stormdata$PROPDMGEXP))
+stormdata$PROPDMGEXP <- as.numeric(recode(as.character(stormdata$PROPDMGEXP), "'0'=1;'1'=10;'2'=10^2;'3'=10^3;'4'=10^4;'5'=10^5;'6'=10^6;'7'=10^7;'8'=10^8;'b'=10^9;'h'=10^2;'k'=10^3;'m'=10^6;'-'=0;'?'=0;'+'=0"))
+
+stormdata$CROPDMGEXP <- factor(tolower(stormdata$CROPDMGEXP))
+stormdata$CROPDMGEXP <- as.numeric(recode(as.character(stormdata$CROPDMGEXP), "'0'=1;'1'=10;'2'=10^2;'3'=10^3;'4'=10^4;'5'=10^5;'6'=10^6;'7'=10^7;'8'=10^8;'b'=10^9;'h'=10^2;'k'=10^3;'m'=10^6;'-'=0;'?'=0;'+'=0"))
 ```
 
-Apply the recoded numeric values of PROPDMGEXP and CROPDMGEXP to PROPDMG and CROPDMG. It will be done by multiplying PROPDMGEXP with PROPDMG and CROPDMGEXP with CROPDMG.
+Apply the recoded numeric values of PROPDMGEXP and CROPDMGEXP to PROPDMG and CROPDMG to calculate the actual crop and property damages. It will be done by multiplying PROPDMGEXP with PROPDMG and CROPDMGEXP with CROPDMG.
 
 ```{r}
 stormdata$PROPDMGVALUE <- stormdata$PROPDMG * stormdata$PROPDMGEXP
@@ -123,23 +126,48 @@ colnames(cropdamage) <- c("Event", "CropDamage")
 cropdamage <- cropdamage[order(cropdamage$Event), ]
 ```
 
-Combine property and and crop damages by event type.
+Clean and narrow down propdamage and cropdamage tables by removing values where propertydamage and cropdamage are 0. We do this since events with 0 occurences are not useful for determination of meaningful results.
 
 ```{r}
-economicimpact <- cbind(propdamage, cropdamage$CropDamage)
-colnames(economicimpact) <- c("Event", "PropertyDamage", "CropDamage")
+propimpact <- propdamage[propdamage$PropertyDamage > 0, ]
+head(propimpact)
+cropimpact <- cropdamage[cropdamage$CropDamage > 0, ]
+head(cropimpact)
 ```
 
-Clean and narrow down economicimpact table by removing values where propertydamage and cropdamage are 0. We do this since events with 0 occurences are not useful for determination of meaningful results.
+We order the propimpact and cropimpact tables to put the events in decreasing order of economic effect. In other words decreasing ordering will put most economicall harmful events at the top of the table while those least harmful at the bottom.
 
 ```{r}
-economicimpact <-economicimpact[economicimpact$PropertyDamage > 0 | economicimpact$CropDamage > 0, ]
-head(economicimpact)
+propimpact <- propimpact[order(propimpact$PropertyDamage, decreasing = TRUE), ]
+head(propimpact)
+cropimpact <- cropimpact[order(cropimpact$CropDamage, decreasing = TRUE), ]
+head(cropimpact)
 ```
 
-We order the economicimpact table to put the events in decreasing order of economic effect. In other words decreasing ordering will put most economicall harmful events at the top of the table while those least harmful at the bottom.
+## Results
+
+### Across the United States, which types of events (as indicated in the EVTYPE variable) are most harmful with respect to population health?
+
+To answer this question we will draw a stacked barplot to see the fatalities and injuries related to different most devastating weather events. We will also see the numbers (numeric view )of faltalities and injuries for top 6 events.
+
+Numeric view of faltalities and injuries for top 6 events. We can see that Tornados are most harmful with respect to population health. Tornados are followed by Excessive Heat, Flash Flood, Heat. Lightning etc.
 
 ```{r}
-economicimpact <- economicimpact[order(economicimpact$PropertyDamage,economicimpact$CropDamage, decreasing = TRUE), ]
-head(economicimpact)
+head(healthimpact)
 ```
+
+To draw the barplot we need to convert heathimpact table calculated above into matrix and transpose it.
+
+```{r}
+plotdatahealth <- as.matrix(healthimpact[, c("Fatalaties", "Injuries")])
+rownames(plotdatahealth) <- healthimpact$Event
+tplotdatahealth <- t(plotdatahealth)
+```
+
+Now the bar plot
+
+```{r}
+barplot(tplotdatahealth, names.arg = healthimpact$Event, legend = c( "Fatalities", "Injuries"), 
+    main = "Total fatalities and injuries by events", col = c("red", "darkblue"), xlim = c(0,10), ylim = c(0,10000))
+```
+
